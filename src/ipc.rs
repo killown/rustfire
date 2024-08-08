@@ -87,6 +87,20 @@ pub struct Workspace {
     pub y: u64,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct WorkspaceSet {
+    #[serde(rename = "index")]
+    pub index: u64,
+    #[serde(rename = "name")]
+    pub name: String,
+    #[serde(rename = "output-id")]
+    pub output_id: i64,
+    #[serde(rename = "output-name")]
+    pub output_name: String,
+    #[serde(rename = "workspace")]
+    pub workspace: Workspace,
+}
+
 pub struct WayfireSocket {
     client: TokioUnixStream,
 }
@@ -152,5 +166,16 @@ impl WayfireSocket {
 
         Ok(outputs)
     }
-}
 
+    pub async fn list_wsets(&mut self) -> io::Result<Vec<WorkspaceSet>> {
+        let message = MsgTemplate {
+            method: "window-rules/list-wsets".to_string(),
+            data: None,
+        };
+
+        let response = self.send_json(&message).await?;
+        let workspace_sets: Vec<WorkspaceSet> = serde_json::from_value(response)?;
+
+        Ok(workspace_sets)
+    }
+}
