@@ -69,7 +69,7 @@ pub struct View {
     pub role: String,
     pub sticky: bool,
     #[serde(rename = "tiled-edges")]
-    pub tiled_edges: u64,
+    pub tiled_edges: i64,
     pub title: String,
     #[serde(rename = "type")]
     pub type_field: String,
@@ -79,16 +79,16 @@ pub struct View {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Geometry {
-    pub height: u64,
-    pub width: u64,
-    pub x: u64,
-    pub y: u64,
+    pub height: i64,
+    pub width: i64,
+    pub x: i64,
+    pub y: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Size {
-    pub height: u64,
-    pub width: u64,
+    pub height: i64,
+    pub width: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -107,17 +107,17 @@ pub struct Output {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Workspace {
     #[serde(rename = "grid_height")]
-    pub grid_height: u64,
+    pub grid_height: i64,
     #[serde(rename = "grid_width")]
-    pub grid_width: u64,
-    pub x: u64,
-    pub y: u64,
+    pub grid_width: i64,
+    pub x: i64,
+    pub y: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WorkspaceSet {
     #[serde(rename = "index")]
-    pub index: u64,
+    pub index: i64,
     #[serde(rename = "name")]
     pub name: String,
     #[serde(rename = "output-id")]
@@ -127,3 +127,4 @@ pub struct WorkspaceSet {
     #[serde(rename = "workspace")]
     pub workspace: Workspace,
 }
+

@@ -136,4 +136,23 @@ impl WayfireSocket {
 
         Ok(output)
     }
+
+    pub async fn get_view(&mut self, view_id: i64) -> io::Result<View> {
+        let message = MsgTemplate {
+            method: "window-rules/view-info".to_string(),
+            data: Some(serde_json::json!({
+                "id": view_id
+            })),
+        };
+
+        let response = self.send_json(&message).await?;
+
+        let info = response.get("info").ok_or_else(|| {
+            io::Error::new(io::ErrorKind::NotFound, "Missing 'info' field in response")
+        })?;
+
+        let view: View = serde_json::from_value(info.clone())?;
+
+        Ok(view)
+    }
 }
