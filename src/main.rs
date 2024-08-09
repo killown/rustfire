@@ -1,5 +1,6 @@
 use std::io;
 mod ipc;
+mod models;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {

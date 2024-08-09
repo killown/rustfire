@@ -1,137 +1,9 @@
-use serde::{Deserialize, Serialize};
+use crate::models::{InputDevice, MsgTemplate, OptionValueResponse, Output, View, WorkspaceSet, WayfireConfiguration};
 use serde_json::Value;
 use std::env;
 use std::io;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::UnixStream as TokioUnixStream;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct MsgTemplate {
-    pub method: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Value>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct InputDevice {
-    pub id: i64, // Changed from String to i64
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "type")]
-    pub type_field: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct OptionValueResponse {
-    pub default: String,
-    pub result: String,
-    pub value: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct WayfireConfiguration {
-    #[serde(rename = "api-version")]
-    pub api_version: u32,
-    #[serde(rename = "build-branch")]
-    pub build_branch: String,
-    #[serde(rename = "build-commit")]
-    pub build_commit: String,
-    #[serde(rename = "plugin-path")]
-    pub plugin_path: String,
-    #[serde(rename = "plugin-xml-dir")]
-    pub plugin_xml_dir: String,
-    #[serde(rename = "xwayland-support")]
-    pub xwayland_support: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct View {
-    pub activated: bool,
-    #[serde(rename = "app-id")]
-    pub app_id: String,
-    #[serde(rename = "base-geometry")]
-    pub base_geometry: Geometry,
-    pub bbox: Geometry,
-    pub focusable: bool,
-    pub fullscreen: bool,
-    pub geometry: Geometry,
-    pub id: i64,
-    #[serde(rename = "last-focus-timestamp")]
-    pub last_focus_timestamp: i64,
-    pub layer: String,
-    pub mapped: bool,
-    #[serde(rename = "max-size")]
-    pub max_size: Size,
-    #[serde(rename = "min-size")]
-    pub min_size: Size,
-    pub minimized: bool,
-    #[serde(rename = "output-id")]
-    pub output_id: i64,
-    #[serde(rename = "output-name")]
-    pub output_name: String,
-    pub parent: i64,
-    pub pid: i64,
-    pub role: String,
-    pub sticky: bool,
-    #[serde(rename = "tiled-edges")]
-    pub tiled_edges: u64,
-    pub title: String,
-    #[serde(rename = "type")]
-    pub type_field: String,
-    #[serde(rename = "wset-index")]
-    pub wset_index: u128,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Geometry {
-    pub height: u64,
-    pub width: u64,
-    pub x: u64,
-    pub y: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Size {
-    pub height: u64,
-    pub width: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Output {
-    pub geometry: Geometry,
-    pub id: i64,
-    pub name: String,
-    #[serde(rename = "workarea")]
-    pub work_area: Geometry,
-    #[serde(rename = "workspace")]
-    pub workspace: Workspace,
-    #[serde(rename = "wset-index")]
-    pub wset_index: u128,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Workspace {
-    #[serde(rename = "grid_height")]
-    pub grid_height: u64,
-    #[serde(rename = "grid_width")]
-    pub grid_width: u64,
-    pub x: u64,
-    pub y: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct WorkspaceSet {
-    #[serde(rename = "index")]
-    pub index: u64,
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "output-id")]
-    pub output_id: i64,
-    #[serde(rename = "output-name")]
-    pub output_name: String,
-    #[serde(rename = "workspace")]
-    pub workspace: Workspace,
-}
 
 pub struct WayfireSocket {
     client: TokioUnixStream,
@@ -234,6 +106,7 @@ impl WayfireSocket {
 
         Ok(configuration)
     }
+
     pub async fn get_option_value(&mut self, option: &str) -> io::Result<OptionValueResponse> {
         let message = MsgTemplate {
             method: "wayfire/get-config-option".to_string(),
@@ -248,3 +121,4 @@ impl WayfireSocket {
         Ok(option_value_response)
     }
 }
+
