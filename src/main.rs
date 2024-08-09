@@ -40,5 +40,10 @@ async fn main() -> io::Result<()> {
         }
     }
 
+    match socket.get_output(1).await {
+        Ok(output) => println!("{:?}", output),
+        Err(e) => eprintln!("Failed to get output: {:?}", e),
+    }
+
     Ok(())
 }

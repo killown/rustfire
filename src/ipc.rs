@@ -1,4 +1,6 @@
-use crate::models::{InputDevice, MsgTemplate, OptionValueResponse, Output, View, WorkspaceSet, WayfireConfiguration};
+use crate::models::{
+    InputDevice, MsgTemplate, OptionValueResponse, Output, View, WayfireConfiguration, WorkspaceSet,
+};
 use serde_json::Value;
 use std::env;
 use std::io;
@@ -120,5 +122,18 @@ impl WayfireSocket {
 
         Ok(option_value_response)
     }
-}
 
+    pub async fn get_output(&mut self, output_id: i64) -> io::Result<Output> {
+        let message = MsgTemplate {
+            method: "window-rules/output-info".to_string(),
+            data: Some(serde_json::json!({
+                "id": output_id
+            })),
+        };
+
+        let response = self.send_json(&message).await?;
+        let output: Output = serde_json::from_value(response)?;
+
+        Ok(output)
+    }
+}
