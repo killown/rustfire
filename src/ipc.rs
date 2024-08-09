@@ -3,6 +3,7 @@ use crate::models::{
 };
 use serde_json::Value;
 use std::env;
+use std::error::Error;
 use std::io;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::UnixStream as TokioUnixStream;
@@ -152,6 +153,23 @@ impl WayfireSocket {
         })?;
 
         let view: View = serde_json::from_value(info.clone())?;
+
+        Ok(view)
+    }
+
+    pub async fn get_focused_view(&mut self) -> Result<View, Box<dyn Error>> {
+        let message = MsgTemplate {
+            method: "window-rules/get-focused-view".to_string(),
+            data: None,
+        };
+
+        let response = self.send_json(&message).await?;
+
+        let view_info = response.get("info").ok_or_else(|| {
+            io::Error::new(io::ErrorKind::NotFound, "Missing 'info' field in response")
+        })?;
+
+        let view: View = serde_json::from_value(view_info.clone())?;
 
         Ok(view)
     }
