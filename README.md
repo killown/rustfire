@@ -27,9 +27,6 @@ rustfire = "0.1.0"  # Replace with the actual version
 
 API Methods
 
-    connect: Establishes a connection to the Wayfire socket.
-    send_json: Sends a JSON message to Wayfire and returns the response.
-    read_message: Reads a JSON message from Wayfire.
     list_views: Retrieves a list of views.
     list_outputs: Retrieves a list of outputs.
     list_wsets: Retrieves a list of workspace sets.
