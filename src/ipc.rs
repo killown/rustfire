@@ -173,4 +173,20 @@ impl WayfireSocket {
 
         Ok(view)
     }
+    pub async fn get_focused_output(&mut self) -> Result<Output, Box<dyn Error>> {
+        let message = MsgTemplate {
+            method: "window-rules/get-focused-output".to_string(),
+            data: None,
+        };
+
+        let response = self.send_json(&message).await?;
+
+        let output_info = response.get("info").ok_or_else(|| {
+            io::Error::new(io::ErrorKind::NotFound, "Missing 'info' field in response")
+        })?;
+
+        let output: Output = serde_json::from_value(output_info.clone())?;
+
+        Ok(output)
+    }
 }

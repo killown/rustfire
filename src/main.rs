@@ -63,5 +63,12 @@ async fn main() -> io::Result<()> {
         Err(e) => eprintln!("Failed to get focused view: {}", e),
     }
 
+    match socket.get_focused_output().await {
+        Ok(output) => print_json("get_focused_output:", output).await?,
+        Err(e) => {
+            eprintln!("Failed to get focused output: {}", e);
+        }
+    }
+
     Ok(())
 }
