@@ -4,8 +4,6 @@
 
 ## Features
 
-- **Connect to Wayfire**: Establish a connection to the Wayfire socket.
-- **Send and Receive JSON Messages**: Send JSON messages to Wayfire and handle responses.
 - **List and Manage Views**: Retrieve information about and manage views.
 - **List and Manage Outputs**: Get details about outputs connected to Wayfire.
 - **Retrieve Configuration**: Access Wayfire's configuration details.
