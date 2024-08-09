@@ -13,6 +13,31 @@ pub struct MsgTemplate {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct InputDevice {
+    pub id: i64, // Changed from String to i64
+    #[serde(rename = "name")]
+    pub name: String,
+    #[serde(rename = "type")]
+    pub type_field: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct WayfireConfiguration {
+    #[serde(rename = "api-version")]
+    pub api_version: u32,
+    #[serde(rename = "build-branch")]
+    pub build_branch: String,
+    #[serde(rename = "build-commit")]
+    pub build_commit: String,
+    #[serde(rename = "plugin-path")]
+    pub plugin_path: String,
+    #[serde(rename = "plugin-xml-dir")]
+    pub plugin_xml_dir: String,
+    #[serde(rename = "xwayland-support")]
+    pub xwayland_support: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct View {
     pub activated: bool,
     #[serde(rename = "app-id")]
@@ -177,5 +202,29 @@ impl WayfireSocket {
         let workspace_sets: Vec<WorkspaceSet> = serde_json::from_value(response)?;
 
         Ok(workspace_sets)
+    }
+
+    pub async fn list_input_devices(&mut self) -> io::Result<Vec<InputDevice>> {
+        let message = MsgTemplate {
+            method: "input/list-devices".to_string(),
+            data: None,
+        };
+
+        let response = self.send_json(&message).await?;
+        let input_devices: Vec<InputDevice> = serde_json::from_value(response)?;
+
+        Ok(input_devices)
+    }
+
+    pub async fn get_configuration(&mut self) -> io::Result<WayfireConfiguration> {
+        let message = MsgTemplate {
+            method: "wayfire/configuration".to_string(),
+            data: None,
+        };
+
+        let response = self.send_json(&message).await?;
+        let configuration: WayfireConfiguration = serde_json::from_value(response)?;
+
+        Ok(configuration)
     }
 }
