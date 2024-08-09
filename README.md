@@ -25,7 +25,7 @@ To include `rustfire` in your Rust project, add it to your `Cargo.toml`:
 ```toml
 [dependencies]
 rustfire = "0.1.0"  # Replace with the actual version
-
+```
 
 API Methods
 
