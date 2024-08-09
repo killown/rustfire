@@ -30,5 +30,14 @@ async fn main() -> io::Result<()> {
         }
     }
 
+    match socket.get_option_value("core/plugins").await {
+        Ok(response) => {
+            println!("Option Value Response: {:?}", response);
+        }
+        Err(e) => {
+            eprintln!("Failed to get option value: {}", e);
+        }
+    }
+
     Ok(())
 }

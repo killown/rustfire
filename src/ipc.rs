@@ -22,6 +22,13 @@ pub struct InputDevice {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct OptionValueResponse {
+    pub default: String,
+    pub result: String,
+    pub value: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct WayfireConfiguration {
     #[serde(rename = "api-version")]
     pub api_version: u32,
@@ -226,5 +233,18 @@ impl WayfireSocket {
         let configuration: WayfireConfiguration = serde_json::from_value(response)?;
 
         Ok(configuration)
+    }
+    pub async fn get_option_value(&mut self, option: &str) -> io::Result<OptionValueResponse> {
+        let message = MsgTemplate {
+            method: "wayfire/get-config-option".to_string(),
+            data: Some(serde_json::json!({
+                "option": option
+            })),
+        };
+
+        let response = self.send_json(&message).await?;
+        let option_value_response: OptionValueResponse = serde_json::from_value(response)?;
+
+        Ok(option_value_response)
     }
 }
